@@ -109,9 +109,10 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+// 1. Definisikan Props dengan membuang (Omit) properti yang berkonflik
 interface ChartTooltipContentProps
-  extends React.ComponentProps<"div">,
-    RechartsPrimitive.TooltipProps<any, any> {
+  extends Omit<React.ComponentProps<"div">, "content">, // Buang 'content' dari div
+    Omit<RechartsPrimitive.TooltipProps<any, any>, "content"> { // Buang 'content' dari Tooltip
   hideLabel?: boolean;
   hideIndicator?: boolean;
   indicator?: "line" | "dot" | "dashed";
@@ -119,6 +120,7 @@ interface ChartTooltipContentProps
   labelKey?: string;
 }
 
+// 2. Gunakan forwardRef agar kompatibel dengan sistem Shadcn
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   ChartTooltipContentProps
