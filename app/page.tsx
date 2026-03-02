@@ -1,3 +1,4 @@
+"use client";
 // Frontend/app/page.tsx
 import { useEffect } from "react";
 import { trackVisitor } from "@/lib/tracker";
