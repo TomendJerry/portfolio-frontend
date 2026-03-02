@@ -47,9 +47,18 @@ export default function AuditPage() {
                 <TableRow><TableCell colSpan={5}>Loading logs...</TableCell></TableRow>
               ) : logs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell className="text-xs">
-                    {new Date(log.timestamp).toLocaleString()}
-                  </TableCell>
+                    <TableCell className="text-xs">
+                    {new Date(log.timestamp).toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta", // Memaksa zona waktu Jakarta (WIB)
+                        hour12: false,             // Format 24 jam
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    })}
+                    </TableCell>
                   <TableCell><Badge variant="outline">{log.ip_address}</Badge></TableCell>
                   <TableCell className="font-mono text-[10px]">{log.device_id}</TableCell>
                   <TableCell>
