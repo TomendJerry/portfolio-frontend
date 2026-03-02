@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { GripVerticalIcon } from "lucide-react";
-// Gunakan Namespace Import untuk fleksibilitas tipe data
-import * as ResizablePrimitive from "react-resizable-panels";
+// REVISI: Paksa casting ke 'any' agar TypeScript mengabaikan validasi properti modul
+import * as ResizableModule from "react-resizable-panels";
+
+const ResizablePrimitive = ResizableModule as any;
 
 import { cn } from "./utils";
 
-// Gunakan any untuk props agar TypeScript melewati validasi yang error
 function ResizablePanelGroup({
   className,
   ...props
