@@ -43,32 +43,42 @@ export default function AuditPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
+            {loading ? (
                 <TableRow><TableCell colSpan={5}>Loading logs...</TableCell></TableRow>
-              ) : logs.map((log) => (
+            ) : logs.map((log) => {
+                // LOGIKA PERBAIKAN WAKTU:
+                // Tambahkan 'Z' agar JavaScript tahu ini UTC, 
+                // sehingga toLocaleString bisa menambah +7 jam untuk Asia/Jakarta
+                const utcDate = log.timestamp.endsWith('Z') 
+                    ? new Date(log.timestamp) 
+                    : new Date(log.timestamp + 'Z');
+
+                return (
                 <TableRow key={log.id}>
-                    <TableCell className="text-xs">
-                    {new Date(log.timestamp).toLocaleString("id-ID", {
-                        timeZone: "Asia/Jakarta", // Memaksa zona waktu Jakarta (WIB)
-                        hour12: false,             // Format 24 jam
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    })}
+                    <TableCell className="text-xs whitespace-nowrap">
+                    {utcDate.toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false,
+                    }).replace(/\./g, ':')} 
                     </TableCell>
-                  <TableCell><Badge variant="outline">{log.ip_address}</Badge></TableCell>
-                  <TableCell className="font-mono text-[10px]">{log.device_id}</TableCell>
-                  <TableCell>
-                    <Badge color="blue">{log.action}</Badge>
-                  </TableCell>
-                  <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground">
+                    <TableCell><Badge variant="outline">{log.ip_address}</Badge></TableCell>
+                    <TableCell className="font-mono text-[10px]">{log.device_id}</TableCell>
+                    <TableCell>
+                    {/* Perbaikan: Gunakan variant='secondary' atau className agar sesuai Shadcn */}
+                    <Badge className="bg-blue-600 hover:bg-blue-700">{log.action}</Badge>
+                    </TableCell>
+                    <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground">
                     {log.user_agent}
-                  </TableCell>
+                    </TableCell>
                 </TableRow>
-              ))}
+                );
+            })}
             </TableBody>
           </Table>
         </CardContent>
