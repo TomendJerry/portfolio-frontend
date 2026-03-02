@@ -12,6 +12,12 @@ export interface HistoryData {
 // TYPE DEFINITIONS
 // ==========================
 
+export interface LogAccessPayload {
+  visitorId: string;
+  browser_details: BrowserDetails;
+  action: string;
+}
+
 export interface BrowserDetails {
   resolution: string;
   language: string;
@@ -104,7 +110,6 @@ predictDemand: async (payload: PredictDemandPayload) => {
 
 export const AuditAPI = {
   getLogs: async (token: string): Promise<AuditLog[]> => {
-    // Gunakan template yang sama dengan endpoint RiceAPI agar tidak salah URL
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audit/logs`, { 
       headers: { 
         "Authorization": `Bearer ${token}`,
@@ -114,4 +119,15 @@ export const AuditAPI = {
     if (!res.ok) throw new Error("Failed to fetch audit logs");
     return res.json();
   },
+
+  // Perbaikan: Ganti 'any' dengan interface 'LogAccessPayload'
+  logAccess: async (data: LogAccessPayload): Promise<{ status: string; message: string }> => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audit/log-access`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Failed to send access log");
+    return res.json();
+  }
 };

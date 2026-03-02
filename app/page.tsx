@@ -1,4 +1,6 @@
 // Frontend/app/page.tsx
+import { useEffect } from "react";
+import { trackVisitor } from "@/lib/tracker";
 import { Hero } from "../components/Hero";
 import { Navigation } from "../components/Navigation";
 import { FocusAreas } from "../components/FocusAreas";
@@ -9,6 +11,10 @@ import { Contact } from "../components/Contact";
 import { RatingSystem } from "@/components/RatingSystem";
 
 export default function Home() {
+  useEffect(() => {
+    // Menjalankan tracker saat komponen pertama kali dimuat
+    trackVisitor("HOME_PAGE_VIEW");
+  }, []);
   return (
     <main className="min-h-screen bg-[#0d1117]">
       <Navigation />
