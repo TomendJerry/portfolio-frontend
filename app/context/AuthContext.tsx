@@ -10,6 +10,7 @@ interface UserData {
 
 interface AuthContextType {
   user: UserData | null;
+  token: string | null; // <-- PERUBAHAN 1: Tambahkan ini
   login: (userData: UserData, token: string) => void;
   logout: () => void;
 }
@@ -17,44 +18,43 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // MENGATASI MASALAH: Gunakan fungsi inisialisasi langsung di useState
+  // Inisialisasi User
   const [user, setUser] = useState<UserData | null>(() => {
-    // Karena Next.js berjalan di Server dulu, kita harus cek apakah 'window' tersedia
     if (typeof window !== "undefined") {
       const savedUser = localStorage.getItem('user_data');
       if (savedUser) {
-        try {
-          return JSON.parse(savedUser);
-        } catch (error) {
-          console.error("Gagal parsing data user:", error);
-          return null;
-        }
+        try { return JSON.parse(savedUser); } catch { return null; }
       }
     }
     return null;
   });
 
-  // useEffect sekarang kosong dari setUser untuk data awal, 
-  // sehingga tidak ada lagi 'cascading renders'
-  useEffect(() => {
-    // Anda bisa menggunakan ini untuk sinkronisasi lain di masa depan jika perlu
-  }, []);
+  // PERUBAHAN 2: Tambahkan state token agar bisa diakses komponen lain
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem('access_token');
+    }
+    return null;
+  });
 
   const login = (userData: UserData, token: string) => {
     localStorage.setItem('access_token', token);
     localStorage.setItem('user_data', JSON.stringify(userData));
     setUser(userData);
+    setToken(token); // <-- Update state token saat login
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_data');
     setUser(null);
+    setToken(null); // <-- Reset state token saat logout
     window.location.href = '/login';
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    // PERUBAHAN 3: Masukkan token ke dalam Provider value
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

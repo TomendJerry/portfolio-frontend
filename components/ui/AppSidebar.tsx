@@ -6,7 +6,7 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, 
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem 
 } from "./sidebar";
-import { FolderKanban, Users, FileText, Star } from "lucide-react";
+import { FolderKanban, Users, FileText, Star, ShieldAlert } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 
 export function AppSidebar() {
@@ -81,6 +81,17 @@ export function AppSidebar() {
                       <Users className="text-blue-500" />
                       <span>Manage Admins</span>
                     </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+
+              {isSuperAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/admin/audit">
+                      <ShieldAlert className="text-red-500" />
+                      <span>Security Audit</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}

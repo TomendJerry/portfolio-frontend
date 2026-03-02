@@ -12,6 +12,26 @@ export interface HistoryData {
 // TYPE DEFINITIONS
 // ==========================
 
+export interface BrowserDetails {
+  resolution: string;
+  language: string;
+  cores: number;
+  timezone: string;
+  platform?: string;
+  vendor?: string;
+}
+
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  ip_address: string;
+  device_id: string;
+  user_agent: string;
+  browser_data: BrowserDetails;
+  action: string;
+  status_code: string;
+}
+
 export interface PredictProductionPayload {
     tahun: number;
     provinsi: string;
@@ -80,4 +100,18 @@ predictDemand: async (payload: PredictDemandPayload) => {
   if (!res.ok) throw new Error("Demand prediction failed");
   return res.json();
 },
+};
+
+export const AuditAPI = {
+  getLogs: async (token: string): Promise<AuditLog[]> => {
+    // Gunakan template yang sama dengan endpoint RiceAPI agar tidak salah URL
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audit/logs`, { 
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json" 
+      },
+    });
+    if (!res.ok) throw new Error("Failed to fetch audit logs");
+    return res.json();
+  },
 };
