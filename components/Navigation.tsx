@@ -1,13 +1,20 @@
 "use client";
 
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Lock } from 'lucide-react'; // Import icon gembok
+import { trackVisitor } from '@/lib/tracker'
 
 export function Navigation() {
   const pathname = usePathname();
   const isHome = pathname === '/';
   const isAdminPage = pathname.startsWith('/admin');
+
+  useEffect(() => {
+    const actionLabel = `Maps_TO: ${pathname === '/' ? 'HOME' : pathname.toUpperCase()}`;
+    trackVisitor(actionLabel);
+  }, [pathname]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d]">
