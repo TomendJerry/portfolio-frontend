@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, Github, Database, Code2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { trackVisitor } from '@/lib/tracker';
 
 // Definisi tipe data sesuai dengan model di Database
 interface Project {
@@ -96,18 +97,27 @@ export function FeaturedProjects() {
                   <div className="flex items-center justify-between pt-4 border-t border-[#30363d]">
                     <Link 
                       href={`/project/${project.id}`}
+                      onClick={() => trackVisitor(`OPEN_PROJECT_DETAILS: ${project.title.toUpperCase()}`)}
                       className="inline-flex items-center gap-2 text-xs text-emerald-400 font-mono hover:gap-3 transition-all"
                     >
                       OPEN_LAB_SYSTEM <ArrowRight className="w-3 h-3" />
                     </Link>
-                    
                     <div className="flex gap-3">
-                       {project.documentation_url && (
-                         <a href={project.documentation_url} target="_blank" className="text-gray-500 hover:text-white transition-colors">
-                           <ExternalLink className="w-4 h-4" />
-                         </a>
-                       )}
-                    </div>
+                    {project.documentation_url && (
+                      <a 
+                        // PERBAIKAN: Gabungkan base API URL dengan path dari DB
+                        href={project.documentation_url.startsWith('http') 
+                          ? project.documentation_url 
+                          : `${process.env.NEXT_PUBLIC_API_URL}${project.documentation_url}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => trackVisitor(`VIEW_DOCS: ${project.title.toUpperCase()}`)}
+                        className="text-gray-500 hover:text-white transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
                   </div>
                 </div>
               </div>
