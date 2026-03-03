@@ -165,9 +165,16 @@ export default function AdminDashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    let cleanDocUrl = formData.documentation_url;
+    if (cleanDocUrl && cleanDocUrl.includes("127.0.0.1:8000")) {
+        // Mengubah "http://127.0.0.1:8000/uploads/file.pdf" menjadi "/uploads/file.pdf"
+        cleanDocUrl = cleanDocUrl.replace(/http:\/\/127\.0\.0\.1:8000/gi, "");
+    }
 
     const filteredMetrics = metrics.filter(m => m.label && m.value);
-    const finalPayload = { ...formData, 
+    const finalPayload = { 
+        ...formData, 
+        documentation_url: cleanDocUrl, // Gunakan URL yang sudah bersih
         metrics_json: filteredMetrics.length ? JSON.stringify(filteredMetrics) : null,
         flowchart_json: flowchart.length ? JSON.stringify(flowchart) : null 
     };
