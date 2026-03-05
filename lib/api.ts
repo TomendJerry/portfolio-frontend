@@ -110,7 +110,8 @@ predictDemand: async (payload: PredictDemandPayload) => {
 
 export const AuditAPI = {
   getLogs: async (token: string): Promise<AuditLog[]> => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audit/logs`, { 
+    // GUNAKAN BASE_URL agar otomatis mengikuti .env.local atau Vercel
+    const res = await fetch(`${BASE_URL}/audit/logs`, { 
       headers: { 
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json" 
@@ -120,9 +121,9 @@ export const AuditAPI = {
     return res.json();
   },
 
-  // Perbaikan: Ganti 'any' dengan interface 'LogAccessPayload'
   logAccess: async (data: LogAccessPayload): Promise<{ status: string; message: string }> => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audit/log-access`, {
+    // GUNAKAN BASE_URL di sini juga
+    const res = await fetch(`${BASE_URL}/audit/log-access`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

@@ -1,4 +1,5 @@
 import { Mail, Github, Linkedin, FileText } from 'lucide-react';
+import { trackVisitor } from '@/lib/tracker';
 
 export function Contact() {
   const links = [
@@ -29,6 +30,10 @@ export function Contact() {
     }
   ];
 
+  const handleLinkClick = (label: string) => {
+    trackVisitor(`CLICK_EXTERNAL_LINK: ${label.toUpperCase()}`);
+  };
+
   return (
     <section id="contact" className="py-24 bg-[#0a0e13] px-6">
       <div className="max-w-4xl mx-auto text-center">
@@ -45,6 +50,7 @@ export function Contact() {
             <a
               key={index}
               href={link.url}
+              onClick={() => handleLinkClick(link.label)}
               className="group p-6 bg-gray-900/30 border border-[#30363d] hover:border-[#10b981]/50 rounded-lg transition-all duration-300"
             >
               <link.icon className="w-6 h-6 text-[#10b981] mb-4 mx-auto group-hover:scale-110 transition-transform" strokeWidth={1.5} />

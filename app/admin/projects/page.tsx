@@ -166,9 +166,11 @@ export default function AdminDashboard() {
     e.preventDefault();
     setIsSubmitting(true);
     let cleanDocUrl = formData.documentation_url;
-    if (cleanDocUrl && cleanDocUrl.includes("127.0.0.1:8000")) {
-        // Mengubah "http://127.0.0.1:8000/uploads/file.pdf" menjadi "/uploads/file.pdf"
+    if (cleanDocUrl) {
+        // Membersihkan localhost
         cleanDocUrl = cleanDocUrl.replace(/http:\/\/127\.0\.0\.1:8000/gi, "");
+        // TAMBAHKAN INI: Membersihkan domain Render (jika ada)
+        cleanDocUrl = cleanDocUrl.replace(/https:\/\/portfolio-backend-j9u3\.onrender\.com/gi, "");
     }
 
     const filteredMetrics = metrics.filter(m => m.label && m.value);
